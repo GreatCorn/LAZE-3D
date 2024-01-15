@@ -1,0 +1,18 @@
+object FMain: TFMain
+  Left = 0
+  Height = 600
+  Top = 0
+  Width = 800
+  Caption = 'MASMZE-3D'
+  Color = clNone
+  DoubleBuffered = True
+  OnChangeBounds = FormResize
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
+  OnResize = FormResize
+  ParentDoubleBuffered = False
+  Position = poDefaultPosOnly
+  LCLVersion = '2.0.10.0'
+end

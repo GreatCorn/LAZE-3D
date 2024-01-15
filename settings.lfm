@@ -1,0 +1,152 @@
+object FSettings: TFSettings
+  Left = 0
+  Height = 317
+  Top = 0
+  Width = 194
+  Align = alClient
+  BorderStyle = bsToolWindow
+  Caption = 'SETTINGS'
+  ClientHeight = 317
+  ClientWidth = 194
+  FormStyle = fsSystemStayOnTop
+  OnClose = FormClose
+  OnShow = FormShow
+  Position = poDefaultPosOnly
+  LCLVersion = '2.0.10.0'
+  object stFullCheck: TCheckBox
+    Left = 6
+    Height = 15
+    Top = 6
+    Width = 182
+    Alignment = taLeftJustify
+    AutoSize = False
+    Caption = 'Fullscreen:'
+    OnClick = stFullCheckClick
+    TabOrder = 0
+  end
+  object stResolLabel: TStaticText
+    Left = 6
+    Height = 15
+    Top = 26
+    Width = 182
+    Caption = 'Windowed resolution:'
+    TabOrder = 1
+  end
+  object stResolCombo: TComboBox
+    Left = 6
+    Height = 23
+    Top = 42
+    Width = 182
+    AutoSize = False
+    ItemHeight = 15
+    OnChange = stResolComboChange
+    Style = csDropDownList
+    TabOrder = 2
+  end
+  object stBrigLabel: TStaticText
+    Left = 6
+    Height = 15
+    Top = 66
+    Width = 182
+    Caption = 'Brightness:'
+    TabOrder = 3
+  end
+  object stBrigTrack: TTrackBar
+    Left = 6
+    Height = 20
+    Top = 82
+    Width = 182
+    Max = 100
+    OnChange = stBrigTrackChange
+    Position = 0
+    TickStyle = tsNone
+    TabOrder = 4
+  end
+  object stMSensLabel: TLabel
+    Left = 6
+    Height = 15
+    Top = 116
+    Width = 182
+    AutoSize = False
+    Caption = 'Mouse sensitivity:'
+    ParentColor = False
+  end
+  object stMSensTrack: TTrackBar
+    Left = 6
+    Height = 20
+    Top = 132
+    Width = 182
+    Max = 100
+    OnChange = stMSensTrackChange
+    Position = 0
+    TickStyle = tsNone
+    TabOrder = 5
+  end
+  object stJoyLabel: TStaticText
+    Left = 6
+    Height = 15
+    Top = 156
+    Width = 182
+    Caption = 'Joystick:'
+    TabOrder = 6
+  end
+  object stJoyCombo: TComboBox
+    Left = 6
+    Height = 23
+    Top = 172
+    Width = 182
+    AutoSize = False
+    ItemHeight = 15
+    Style = csDropDownList
+    TabOrder = 7
+  end
+  object stJSensLabel: TLabel
+    Left = 6
+    Height = 15
+    Top = 196
+    Width = 182
+    AutoSize = False
+    Caption = 'Joystick sensitivity:'
+    ParentColor = False
+  end
+  object stJSensTrack: TTrackBar
+    Left = 6
+    Height = 20
+    Top = 212
+    Width = 182
+    Max = 700
+    OnChange = stJSensTrackChange
+    Position = 0
+    TickStyle = tsNone
+    TabOrder = 8
+  end
+  object stVolLabel: TLabel
+    Left = 6
+    Height = 15
+    Top = 246
+    Width = 182
+    AutoSize = False
+    Caption = 'Audio volume:'
+    ParentColor = False
+  end
+  object stVolTrack: TTrackBar
+    Left = 6
+    Height = 20
+    Top = 262
+    Width = 182
+    Max = 200
+    OnChange = stVolTrackChange
+    Position = 0
+    TickStyle = tsNone
+    TabOrder = 9
+  end
+  object stOkBtn: TButton
+    Left = 64
+    Height = 24
+    Top = 286
+    Width = 64
+    Caption = 'OK'
+    OnClick = stOkBtnClick
+    TabOrder = 10
+  end
+end

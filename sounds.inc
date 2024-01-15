@@ -1,0 +1,56 @@
+{
+  LAZE-3D sound identifiers
+}
+
+SndAlarm: ALUint;
+SndAmb: ALUint;
+SndAmbT: ALUint;
+SndAmbW: Array[0..3] of ALUint;
+SndCheckpoint: ALUint;
+SndDeath: ALUint;
+SndDig: ALUint;
+SndDistress: ALUint;
+SndDoorClose: ALUint;
+SndDrip: ALUint;
+SndEBD: ALUint;
+SndEBDA: ALUint;
+SndExit: ALUint;
+SndExit1: ALUint;
+SndExplosion: ALUint;
+SndHbd: ALUint;
+SndHbdO: ALUint;
+SndHurt: ALUint;
+SndImpact: ALUint;
+SndIntro: ALUint;
+SndKey: ALUint;
+SndKubale: ALUint;
+SndKubaleAppear: ALUint;
+SndKubaleV: ALUint;
+SndMistake: ALUint;
+SndMus1: ALUint;
+SndMus2: ALUint;
+SndMus3: ALUint;
+SndMus4: ALUint;
+SndMus5: ALUint;
+SndRand: Array[0..5] of ALUint;
+SndSave: ALUint;
+SndScribble: ALUint;
+SndSiren: ALUint;
+SndSlam: ALUint;
+SndSplash: ALUint;
+SndStep: Array[0..3] of ALUint;
+SndTram: ALUint;
+SndTramAnn: Array[0..2] of ALUint;
+SndTramClose: ALUint;
+SndTramOpen: ALUint;
+SndVirdya: ALUint;
+SndWBAlarm: ALUint;
+SndWBAttack: ALUint;
+SndWBIdle: Array[0..1] of ALUint;
+SndWBStep: Array[0..3] of ALUint;
+SndWBBK: ALUint;
+SndWhisper: ALUint;
+SndWmblyk: ALUint;
+SndWmblykB: ALUint;
+SndWmblykStr: ALUint;
+SndWmblykStrM: ALUint;
