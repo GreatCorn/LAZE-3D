@@ -4,6 +4,8 @@ LAZE-3D is a cross-platform Pascal (Lazarus) rewrite project of MASMZE-3D (v1.1)
 The repository does not include the libraries **stb_vorbis** and **OpenAL Soft**, you can download (and build) them from: https://github.com/nothings/stb and https://openal-soft.org/ . You can also use the installable OpenAL library by changing **OpenALPath** in **audio.inc** to a valid path to OpenAL.dll.
 The repository also does not include any game assets, the use of which, together with the game logic, are hard-coded. To get the resources, you can download the game.
 
+***
+
 The game's code, not including the external libraries, is licensed under the GNU General Public License v3.0. The game's assets are licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 
 © Yevhenii Ionenko (aka GreatCorn), 2023-2024
