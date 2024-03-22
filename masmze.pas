@@ -282,6 +282,15 @@ const
   CCSaveErase = 'PRESS ENTER TO ERASE SAVE';
   CCSaveEraseJ = 'PRESS SELECT TO ERASE SAVE';
 
+  CCTipEBD    = 'SOME PREY ON THE UNOBSERVANT.';
+  CCTipHBD    = 'SOME DICTATE THEIR OWN PATH.';
+  CCTipKubale = 'SOME CHASTEN ERRATIC GAZE.';
+  CCTipVirdya = 'SOME DO NOT EXALT SIN.';
+  CCTipWB     = 'SOME PUNISH STRIDENT ACTS.';
+  CCTipWmblyk = 'SOME DRAW ON FEEBLE EFFORTS.';
+  CCTipSecret = 'LOL. LMAO.';
+  CCTipEmpty  = '';
+
   MenuBrightness = 'BRIGHTNESS'; { Menu-related strings }
   MenuSettings = 'SETTINGS';
   MenuPaused = 'MASMZE-3D IS PAUSED';
@@ -436,6 +445,7 @@ var
   { ----- INITIALIZED DATA ----- }
   CCGlyph: AnsiString = 'PLACED GLYPH. ? REMAINING.';
   CCDeath: AnsiString = 'YOU DIED.';
+  CCTip: PChar = CCTipEmpty;
 
   canControl: Boolean = False; { Boolean to enable/disable player control }
   mFocused: Boolean = True; { Window focus }
@@ -1964,8 +1974,10 @@ begin
 
       { Time limit }
       fade := fade + deltaTime * 0.1;
-      if (fade > 1.0) then
+      if (fade > 1.0) then begin
+        CCTip := CCTipWmblyk;
         playerState := 9;
+      end;
       Lerp(@vignetteRed, 1.0, deltaTime);
 
       alSourcef(SndWmblykB, AL_GAIN, wmblykStr + 0.5);
@@ -2010,12 +2022,28 @@ begin
           hbd := 0;
 
           playerState := 10;
+
+          kubale := 0;
+          virdya := 0;
+          wmblyk := 0;
         end;
       end;
 
       alGetSourcef(SndAmb, AL_GAIN, mtplr);
       Lerp(@mtplr, 0, deltaTime);
-      alSourcef(SndAmb, AL_GAIN, mtplr);
+      alSourcef(SndAmb, AL_GAIN, mtplr);           
+
+      alGetSourcef(SndKubale, AL_GAIN, mtplr);
+      Lerp(@mtplr, 0, deltaTime);
+      alSourcef(SndKubale, AL_GAIN, mtplr);
+
+      alGetSourcef(SndKubaleV, AL_GAIN, mtplr);
+      Lerp(@mtplr, 0, deltaTime);
+      alSourcef(SndKubaleV, AL_GAIN, mtplr);
+
+      alGetSourcef(SndVirdya, AL_GAIN, mtplr);
+      Lerp(@mtplr, 0, deltaTime);
+      alSourcef(SndVirdya, AL_GAIN, mtplr);
 
       alGetSourcef(SndWmblykB, AL_GAIN, mtplr);
       Lerp(@mtplr, 0, deltaTime);
@@ -2635,7 +2663,7 @@ begin
   end;
 
   if (Croa <> 0) then begin
-    fltVal := deltaTime * 0.5;
+    fltVal := deltaTime * 0.33;
     Lerp(@CroaPos, 2.0, fltVal);
 
     Lerp(@AscendSky, 0.9, delta2); { Lighting }
@@ -2648,8 +2676,7 @@ begin
     AscendColor[2] := AscendColor[1] * 0.75;
     glLightfv(GL_LIGHT0, GL_SPECULAR, @AscendColor);
     if (Croa = 2) then begin
-      Lerp(@CroaColor[0], 0.01, fltVal);
-      CroaColor[0] := CroaColor[0] + fltVal;   
+      Lerp(@CroaColor[0], 1.0, fltVal);
       CroaColor[1] := CroaColor[0] * 0.75;     
       CroaColor[2] := CroaColor[1] * 0.75;    
       glLightfv(GL_LIGHT0, GL_AMBIENT, @CroaColor);
@@ -2696,14 +2723,15 @@ begin
         vignetteRed := vignetteRed + delta2 + delta2;
         if (fade > 1.0) then begin
           canControl := False;
+          CCTip := CCTipEbd;
           playerState := 9;
           alSourceStop(SndEBD);
           alSourceStop(SndEBDA);
         end;
       end else begin
         if ((kubale = 0) and (virdya = 0)) then begin
-          Lerp(@fade, 0, delta2);
-          Lerp(@vignetteRed, 0, delta2);
+          Lerp(@fade, 0, deltaTime);
+          Lerp(@vignetteRed, 0, deltaTime);
         end;
         Lerp(@EBDSound, 0, delta20);
       end;
@@ -3029,6 +3057,7 @@ begin
     if (hbd = 3) then begin
       if ((Dist < 0.9) and (playerState = 0)) then begin
         alSourcePlay(SndImpact);
+        CCTip := CCTipHBD;
         playerState := 9;
         fadeState := 2;
       end;
@@ -3155,6 +3184,10 @@ begin
 
   i := yFrom;
   while (i < yTo) do begin { Cull start index to cull end index }
+    if (MazeLevel = 63) then
+      if (Length(Maze) = 0) then
+        Exit;
+                           
     { Get cell }
     PassTop := Maze[i] and MZC_PASSTOP <> 0;
     PassLeft := Maze[i] and MZC_PASSLEFT <> 0;
@@ -4239,6 +4272,7 @@ begin
     end;
 
   headHeight := 1.37;
+  { State case process }
   case virdyaState of
     0: begin { Standing process }
       virdyaSpeed[0] := 0;
@@ -4275,14 +4309,16 @@ begin
         virdyaSound := 0;
     end;
     2: begin { Glyph placed process }
-      if ((GlyphsInLayer <> 0) and (Glyphs = 6)) then begin
-        distance := DistanceToSqr(virdyaPos[0], virdyaPos[1],
-          GlyphPos[0], GlyphPos[1]);
-        virdyaDest[0] := GlyphPos[0];
-        virdyaDest[1] := GlyphPos[1];
-      end else begin
-        virdyaDest[0] := camPosN[0];
-        virdyaDest[1] := camPosN[1];
+      if (GlyphsInLayer <> 0) then begin
+        if (Glyphs = 6) then begin
+          distance := DistanceToSqr(virdyaPos[0], virdyaPos[1],
+            GlyphPos[0], GlyphPos[1]);
+          virdyaDest[0] := GlyphPos[0];
+          virdyaDest[1] := GlyphPos[1];
+        end else begin
+          virdyaDest[0] := camPosN[0];
+          virdyaDest[1] := camPosN[1];
+        end;
       end;
 
       virdyaRot := GetDirection(virdyaPos[0], virdyaPos[1],
@@ -4306,6 +4342,9 @@ begin
         virdyaSpeed[1] := 0;
         virdya := 58;
       end;
+
+      if (GlyphsInLayer = 0) then
+        virdyaState := 0;
     end;
     3: begin { Defensive process }
       virdyaRot := GetDirection(virdyaPos[0], virdyaPos[1],
@@ -4325,6 +4364,7 @@ begin
             fade := deltaTime * 0.2 + fade;
             if (fade > 1.0) then begin
               canControl := False;
+              CCTip := CCTipVirdya;
               playerState := 9;
             end;
             Lerp(@virdyaSound, 1.0, deltaTime);
@@ -4365,7 +4405,7 @@ begin
     end;
   end;
 
-  { React to glyphs }
+  { Change state in regard to glyphs }
   if ((Glyphs < 7) and (Glyphs >= 5) and (virdyaState <> 2)) then begin
     if (GlyphsInLayer <> 0) then begin
       distance := DistanceToSqr(virdyaPos[0], virdyaPos[1],
@@ -4755,6 +4795,7 @@ begin
           if ((distancePlayer < 0.75) and (WBFront(False))) then begin
             alSource3f(SndHurt, AL_POSITION, WBPosL[0], 0, WBPosL[1]);
             alSourcePlay(SndHurt);
+            CCTip := CCTipWB;
             playerState := 9;
             fadeState := 2;
             canControl := False;
@@ -5269,6 +5310,7 @@ begin
             if (wmblykStr < -0.7) then
               if ((playerState <> 9) and (playerState <> 10)) then begin
                 canControl := False;
+                CCTip := CCTipWmblyk;
                 playerState := 9;
               end;
           end;
@@ -5315,6 +5357,7 @@ begin
       if (wmblykStealth > 1.5) then begin
         alSourceStop(SndAmb);
         fade := 1.0;
+        CCTip := CCTipSecret;
         playerState := 9;
         wmblyk := 17;
         CCDeath[5] := #71;  
@@ -6088,8 +6131,10 @@ begin
       Lerp(@kubaleVision, 1.0, delta2);
       Lerp(@vignetteRed, 1.0, deltaTime);
       fade := deltaTime + fade;
-      if (fade > 1.0) then
+      if (fade > 1.0) then begin
+        CCTip := CCTipKubale;
         playerState := 9;
+      end;
     end else begin
       Lerp(@kubaleVision, 0, delta2);
       if (kubaleVision < 0.01) then
@@ -7063,22 +7108,7 @@ begin
     glCallList(3);
   end;
 
-  if (wmblyk = 1) then begin { Wmblyk jumpscare }
-    glBindTexture(GL_TEXTURE_2D, TexWmblykJumpscare);
-    glColor4f(1.0, 1.0, 1.0, wmblykJumpscare);
-    glCallList(3);
-
-    Lerp(@wmblykJumpscare, -0.1, delta2);
-    if (wmblykJumpscare < 0.0) then begin
-      wmblykJumpscare := 0;
-      if (wmblykStealthy = 0) then
-        wmblyk := 0
-      else
-        wmblyk := 8;
-    end;
-  end;
-
-  if (kubale > 28) then begin
+  if (kubale > 28) then begin { Kubale visions }
     glBindTexture(GL_TEXTURE_2D, TexKubaleInkblot[Random(9)]);
 
     glColor4f(kubaleVision, kubaleVision, kubaleVision, 1.0);
@@ -7092,6 +7122,24 @@ begin
     glEnable(GL_CULL_FACE);
   end;
   glColor4fv(@mclWhite);
+
+  if (wmblyk = 1) then begin { Wmblyk jumpscare }
+    glBindTexture(GL_TEXTURE_2D, TexWmblykJumpscare);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(1.0, 1.0, 1.0, wmblykJumpscare);
+    glCallList(3);
+
+    Shake(wmblykJumpscare * 0.04);
+
+    Lerp(@wmblykJumpscare, -0.1, delta2);
+    if (wmblykJumpscare <= 0.0) then begin
+      wmblykJumpscare := 0;
+      if (wmblykStealthy = 0) then
+        wmblyk := 0
+      else
+        wmblyk := 8;
+    end;
+  end;
 
   if (ccTimer > 0.0) then begin { Subtitles }
     ccTimer := ccTimer - deltaTime;
@@ -7126,6 +7174,8 @@ begin
       glLoadIdentity;
       glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
       DrawBitmapText(CCDeath, winWH, winHH - 32.0, FNT_CENTERED);
+
+      DrawBitmapText(CCTip, winWH, winHH + 96.0, FNT_CENTERED);
 
       DrawBitmapText(CCLevel, winWH - 32.0, winHH + 32.0, FNT_CENTERED);
       DrawBitmapText(MazeLevelStr, winWH + 58.0, winHH + 32.0, FNT_LEFT);
